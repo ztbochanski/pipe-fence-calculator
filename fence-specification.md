@@ -16,7 +16,7 @@
 
 | 🧱 Component     | 📏 Linear Ft | 🔢 Pieces | 📐 Stick Est. (30 ft each) |
 |------------------|--------------|-----------|----------------------------|
-| 🪵 Posts         | 323.0 ft     | 40        | ~10.8                      |
+| 🪵 Posts         | 323.0 ft     | 38        | ~10.8                      |
 | 🚧 Top Rail      | 267.5 ft     | 5 spans   | ~8.9                       |
 | 🪚 Mid Rails     | 339.5 ft     | 39        | ~11.3                      |
 | 📦 **Total**     | **930.0 ft** | —         | **~31.0 sticks** (before optimization) |
