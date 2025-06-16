@@ -4,7 +4,7 @@ from dataclasses import dataclass
 
 # Constants
 STICK_LENGTH = 29.0  # length of one pipe stick in feet
-POST_HEIGHT = 7.5    # height of posts in feet
+POST_HEIGHT = 8   # height of posts in feet
 POST_SPACING = 10.0   # spacing between posts in feet
 STICK_PRICE = 55.0   # price per stick in dollars
 
@@ -21,6 +21,7 @@ class Cut:
     length: float
     source_stick: int
     purpose: str  # "POST", "TOP_RAIL", "MID_RAIL"
+    segment_index: int  # Index of the segment this cut belongs to
 
 @dataclass
 class Stick:
@@ -99,24 +100,24 @@ def optimize_cuts(segments: List[FenceSegment]) -> List[Stick]:
     all_cuts = []
     
     # Add post cuts
-    for segment in segments:
+    for segment_idx, segment in enumerate(segments):
         if segment.components is None:
             segment.components = segment.calculate_components()
         
         # Add post cuts
         for _ in range(segment.components.num_posts):
-            all_cuts.append(Cut(POST_HEIGHT, 0, "POST"))
+            all_cuts.append(Cut(POST_HEIGHT, 0, "POST", segment_idx))
         
         # Add top rail cuts
         remaining_length = segment.length
         while remaining_length > 0:
             if remaining_length >= STICK_LENGTH:
                 # For full sticks, just add one cut
-                all_cuts.append(Cut(STICK_LENGTH, 0, "TOP_RAIL"))
+                all_cuts.append(Cut(STICK_LENGTH, 0, "TOP_RAIL", segment_idx))
                 remaining_length -= STICK_LENGTH
             else:
                 # For partial sticks, add the remaining length
-                all_cuts.append(Cut(remaining_length, 0, "TOP_RAIL"))
+                all_cuts.append(Cut(remaining_length, 0, "TOP_RAIL", segment_idx))
                 remaining_length = 0
 
     # Sort cuts by length in descending order
@@ -220,7 +221,7 @@ def print_material_breakdown(segments: List[FenceSegment], totals: ProjectTotals
         total_cut_length = sum(cut.length for cut in stick.cuts)
         print(f"  Total cut length: {total_cut_length:.1f} ft")
         for cut in stick.cuts:
-            print(f"  - {cut.length:.1f} ft ({cut.purpose})")
+            print(f"  - {cut.length:.1f} ft ({cut.purpose}) for Segment {cut.segment_index + 1}")
         print(f"  Remaining: {stick.remaining_length:.1f} ft")
     
     print(f"\nTotal Sticks Needed: {len(totals.optimized_sticks)}")
