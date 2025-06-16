@@ -4,8 +4,8 @@ from dataclasses import dataclass
 
 # Constants
 STICK_LENGTH = 29.0  # length of one pipe stick in feet
-POST_HEIGHT = 8.5    # height of posts in feet
-POST_SPACING = 8.0   # spacing between posts in feet
+POST_HEIGHT = 7.5    # height of posts in feet
+POST_SPACING = 10.0   # spacing between posts in feet
 STICK_PRICE = 55.0   # price per stick in dollars
 
 class SegmentType(Enum):
@@ -164,7 +164,9 @@ def calculate_project_totals(segments: List[FenceSegment]) -> ProjectTotals:
         
         total_post_length += segment.components.num_posts * POST_HEIGHT
         total_top_rail_length += segment.components.top_rail_length
-        total_mid_rail_length += segment.components.mid_rail_sections * segment.length
+        # Calculate mid rail length by summing the actual section lengths
+        for section in segment.components.sections:
+            total_mid_rail_length += section.length
 
     total_sticks = (total_post_length + total_top_rail_length + total_mid_rail_length) / STICK_LENGTH
     
